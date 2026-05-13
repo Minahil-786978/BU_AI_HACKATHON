@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>AtomLearn AI</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        body{
+            font-family: Poppins;
+            background: linear-gradient(to right,#020617,#0f172a,#1e293b);
+            overflow: hidden;
+        }
+
+        .glass{
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(12px);
+            border:1px solid rgba(255,255,255,0.1);
+        }
+
+        .robot{
+            animation: rotateRobot 5s linear infinite;
+        }
+
+        @keyframes rotateRobot{
+
+            0%{
+                transform: rotateY(0deg);
+            }
+
+            100%{
+                transform: rotateY(360deg);
+            }
+        }
+
+        .fade-out{
+            opacity:0;
+            visibility:hidden;
+            transition:1s;
+        }
+
+        .fade-in{
+            opacity:1;
+            visibility:visible;
+            transition:1s;
+        }
+
+    </style>
+
+</head>
+
+<body class="min-h-screen flex justify-center items-center text-white">
+
+    <!-- SPLASH SCREEN -->
+
+    <div id="splashScreen"
+        class="fixed inset-0 flex flex-col justify-center items-center bg-[#020617] z-50">
+
+        <div class="robot text-8xl mb-8">
+            🤖
+        </div>
+
+        <h1 class="text-6xl font-bold text-cyan-400 tracking-wider mb-4">
+            AtomLearn AI
+        </h1>
+
+        <p class="text-gray-400 text-xl">
+            AI Powered Adaptive LMS
+        </p>
+
+        <!-- LOADING BAR -->
+
+        <div class="w-[300px] h-2 bg-slate-800 rounded-full mt-10 overflow-hidden">
+
+            <div id="loader"
+                class="h-full bg-cyan-400 rounded-full"
+                style="width:0%">
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- LOGIN SCREEN -->
+
+    <div id="loginScreen"
+        class="glass p-10 rounded-3xl w-[420px] opacity-0 invisible transition-all duration-1000">
+
+        <div class="text-center mb-8">
+
+            <div class="text-6xl mb-4">
+                🧠
+            </div>
+
+            <h1 class="text-4xl font-bold text-cyan-400 mb-2">
+                AtomLearn AI
+            </h1>
+
+            <p class="text-gray-300">
+                Welcome Back Student
+            </p>
+
+        </div>
+
+        {% if error %}
+
+            <div class="bg-red-500 p-3 rounded-xl mb-5 text-center">
+
+                {{ error }}
+
+            </div>
+
+        {% endif %}
+
+        <!-- LOGIN FORM -->
+
+        <form method="POST">
+
+            <input
+            type="email"
+            name="email"
+            placeholder="Enter Email"
+            class="w-full p-4 rounded-xl bg-slate-800 mb-5 outline-none border border-slate-700 focus:border-cyan-400"
+            required>
+
+            <input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            class="w-full p-4 rounded-xl bg-slate-800 mb-6 outline-none border border-slate-700 focus:border-cyan-400"
+            required>
+
+            <button
+            type="submit"
+            class="w-full bg-cyan-500 hover:bg-cyan-400 p-4 rounded-xl font-bold text-lg transition duration-300">
+
+                Login To Dashboard
+
+            </button>
+
+        </form>
+
+    </div>
+
+<script>
+
+    // SPLASH SCREEN ANIMATION
+
+    let width = 0;
+
+    const loader = document.getElementById("loader");
+
+    const interval = setInterval(() => {
+
+        width += 2;
+
+        loader.style.width = width + "%";
+
+        if(width >= 100){
+
+            clearInterval(interval);
+
+            // HIDE SPLASH
+
+            document.getElementById("splashScreen")
+            .classList.add("fade-out");
+
+            // SHOW LOGIN
+
+            setTimeout(() => {
+
+                const login = document.getElementById("loginScreen");
+
+                login.classList.remove("opacity-0");
+                login.classList.remove("invisible");
+
+                login.classList.add("opacity-100");
+
+            },800);
+
+        }
+
+    },50);
+
+</script>
+
+</body>
+</html>
