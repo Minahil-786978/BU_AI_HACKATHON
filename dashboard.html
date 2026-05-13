@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | AtomLearn AI</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #020617;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .course-item:hover {
+            background: rgba(6, 182, 212, 0.1);
+            color: #22d3ee;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="text-white no-scrollbar">
+
+<div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <div class="w-[300px] glass p-8 flex flex-col fixed h-full">
+
+        <h1 class="text-3xl font-bold text-cyan-400 mb-10">
+            AtomLearn AI
+        </h1>
+
+        <nav class="space-y-4 flex-1">
+
+            <button onclick="showSection('default-view')"
+                class="w-full text-left p-4 rounded-xl bg-cyan-500 font-bold">
+                Dashboard
+            </button>
+
+            <!-- COURSES DROPDOWN -->
+            <div class="relative">
+
+                <button onclick="toggleDropdown()"
+                    class="w-full flex justify-between items-center p-4 rounded-xl bg-slate-800 hover:bg-slate-700 transition">
+
+                    <span>Courses</span>
+                    <span id="arrow">▾</span>
+
+                </button>
+
+                <div id="courseDropdown"
+                    class="hidden mt-2 ml-2 space-y-1 border-l border-slate-700">
+
+                    {% for row in performance %}
+
+                    <button
+                        onclick="showCourseDetails('{{ row[2] }}', '{{ row[3] }}', '{{ row[4] }}', '{{ row[5] }}', '{{ row[8] }}')"
+
+                        class="course-item block w-full text-left py-2 px-6 text-sm text-gray-400 rounded-r-lg transition">
+
+                        {{ row[2] }}
+
+                    </button>
+
+                    {% endfor %}
+
+                </div>
+            </div>
+
+            <!-- ANALYTICS BUTTON -->
+            <button onclick="showSection('analytics-view')"
+                class="w-full text-left p-4 rounded-xl bg-slate-800 hover:bg-slate-700 transition">
+
+                Analytics
+
+            </button>
+
+        </nav>
+
+        <!-- LOGOUT -->
+        <a href="/logout" class="mt-auto">
+
+            <div
+                class="p-4 rounded-xl bg-red-500 hover:bg-red-600 text-center font-bold transition">
+
+                Logout
+
+            </div>
+
+        </a>
+
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="flex-1 ml-[300px] p-10">
+
+        <!-- HEADER -->
+        <div class="flex justify-between items-center mb-10">
+
+            <div>
+
+                <h1 class="text-4xl font-bold text-white">
+                    Welcome, {{ student[2] }}
+                </h1>
+
+                <p class="text-gray-400 mt-2">
+                    Personalized Learning Progress
+                </p>
+
+            </div>
+
+            <div class="glass p-5 rounded-2xl border-l-4 border-cyan-400">
+
+                <h2 class="text-cyan-400 text-xs font-bold uppercase tracking-widest">
+                    Career Goal
+                </h2>
+
+                <p class="text-lg font-semibold text-white">
+                    {{ student[6] }}
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- DASHBOARD VIEW -->
+        <div id="default-view">
+
+            <!-- STATS -->
+            <div class="grid grid-cols-4 gap-6 mb-10">
+
+                <div class="glass p-6 rounded-3xl border-b-4 border-cyan-400">
+
+                    <p class="text-gray-400 text-sm">Focus Score</p>
+
+                    <h1 class="text-4xl font-bold text-white mt-3">
+                        {{ student[7] }}%
+                    </h1>
+
+                </div>
+
+                <div class="glass p-6 rounded-3xl border-b-4 border-orange-400">
+
+                    <p class="text-gray-400 text-sm">Learning Streak</p>
+
+                    <h1 class="text-4xl font-bold text-white mt-3">
+                        {{ student[8] }} Days
+                    </h1>
+
+                </div>
+
+                <div class="glass p-6 rounded-3xl border-b-4 border-green-400">
+
+                    <p class="text-gray-400 text-sm">Completion Rate</p>
+
+                    <h1 class="text-4xl font-bold text-white mt-3">
+                        {{ student[9] }}%
+                    </h1>
+
+                </div>
+
+                <div class="glass p-6 rounded-3xl border-b-4 border-purple-400">
+
+                    <p class="text-gray-400 text-sm">GPA</p>
+
+                    <h1 class="text-4xl font-bold text-white mt-3">
+                        {{ student[12] }}
+                    </h1>
+
+                </div>
+
+            </div>
+
+            <!-- AI DNA -->
+            <div class="glass p-8 rounded-3xl">
+
+                <h1 class="text-2xl font-bold text-cyan-400 mb-8 flex items-center">
+
+                    <span class="mr-3">🧬</span>
+
+                    AI Learning DNA
+
+                </h1>
+
+                <div class="grid grid-cols-2 gap-6">
+
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+
+                        <p class="text-gray-500 font-medium">
+                            Strongest Skill
+                        </p>
+
+                        <h2 class="text-2xl font-bold text-green-400 mt-1">
+                            {{ dna[2] }}
+                        </h2>
+
+                    </div>
+
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+
+                        <p class="text-gray-500 font-medium">
+                            Weakest Skill
+                        </p>
+
+                        <h2 class="text-2xl font-bold text-red-400 mt-1">
+                            {{ dna[3] }}
+                        </h2>
+
+                    </div>
+
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+
+                        <p class="text-gray-500 font-medium">
+                            Attention Span
+                        </p>
+
+                        <h2 class="text-2xl font-bold mt-1 text-white">
+                            {{ dna[5] }} Minutes
+                        </h2>
+
+                    </div>
+
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+
+                        <p class="text-gray-500 font-medium">
+                            Success Prediction
+                        </p>
+
+                        <h2 class="text-2xl font-bold text-cyan-400 mt-1">
+                            {{ dna[7] }}%
+                        </h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- COURSE VIEW -->
+        <div id="course-view" class="hidden">
+
+            <button onclick="showSection('default-view')"
+                class="mb-6 flex items-center text-cyan-400 hover:text-cyan-300 transition">
+
+                ← Back to Overview
+
+            </button>
+
+            <h1 id="course-title"
+                class="text-4xl font-bold mb-10 text-white underline decoration-cyan-500 underline-offset-8">
+
+                Course Details
+
+            </h1>
+
+            <div class="grid grid-cols-3 gap-8">
+
+                <div class="glass p-8 rounded-3xl text-center">
+
+                    <p class="text-gray-400 font-medium">
+                        Quiz Score
+                    </p>
+
+                    <h2 id="c-quiz"
+                        class="text-4xl font-bold mt-2 text-cyan-400">
+                        -
+                    </h2>
+
+                </div>
+
+                <div class="glass p-8 rounded-3xl text-center">
+
+                    <p class="text-gray-400 font-medium">
+                        Assignments
+                    </p>
+
+                    <h2 id="c-assign"
+                        class="text-4xl font-bold mt-2 text-purple-400">
+                        -
+                    </h2>
+
+                </div>
+
+                <div class="glass p-8 rounded-3xl text-center">
+
+                    <p class="text-gray-400 font-medium">
+                        Project Marks
+                    </p>
+
+                    <h2 id="c-project"
+                        class="text-4xl font-bold mt-2 text-orange-400">
+                        -
+                    </h2>
+
+                </div>
+
+            </div>
+
+            <!-- PROGRESS -->
+            <div class="glass p-10 rounded-3xl mt-8">
+
+                <div class="flex justify-between items-end mb-4">
+
+                    <h3 class="text-xl font-bold text-white">
+                        Course Completion
+                    </h3>
+
+                    <span id="c-percent"
+                        class="text-3xl font-bold text-cyan-400">
+
+                        0%
+
+                    </span>
+
+                </div>
+
+                <div class="w-full bg-slate-800 rounded-full h-4 overflow-hidden">
+
+                    <div id="c-bar"
+                        class="bg-cyan-500 h-full transition-all duration-700"
+                        style="width:0%">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ANALYTICS VIEW -->
+        <div id="analytics-view" class="hidden">
+
+            <button onclick="showSection('default-view')"
+                class="mb-6 flex items-center text-cyan-400 hover:text-cyan-300 transition">
+
+                ← Back to Overview
+
+            </button>
+
+            <h1 class="text-4xl font-bold mb-10 text-white">
+
+                Learning Analytics
+
+            </h1>
+
+            <!-- LINE CHART -->
+            <div class="glass p-8 rounded-3xl mb-10">
+
+                <h2 class="text-2xl font-bold text-cyan-400 mb-6">
+
+                    Course Completion Trend
+
+                </h2>
+
+                <div class="h-[400px]">
+
+                    <canvas id="courseLineChart"></canvas>
+
+                </div>
+
+            </div>
+
+            <!-- BAR CHART -->
+            <div class="glass p-8 rounded-3xl">
+
+                <h2 class="text-2xl font-bold text-cyan-400 mb-6">
+
+                    Performance Comparison
+
+                </h2>
+
+                <div class="h-[450px]">
+
+                    <canvas id="courseBarChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    let chartsLoaded = false;
+
+    function toggleDropdown() {
+
+        const dropdown = document.getElementById('courseDropdown');
+
+        dropdown.classList.toggle('hidden');
+    }
+
+    function showSection(sectionId) {
+
+        document.getElementById('default-view').classList.add('hidden');
+        document.getElementById('course-view').classList.add('hidden');
+        document.getElementById('analytics-view').classList.add('hidden');
+
+        document.getElementById(sectionId).classList.remove('hidden');
+
+        if (sectionId === 'analytics-view' && !chartsLoaded) {
+
+            renderAtomCharts();
+
+            chartsLoaded = true;
+        }
+    }
+
+    function showCourseDetails(name, quiz, assign, proj, progress) {
+
+        showSection('course-view');
+
+        document.getElementById('course-title').innerText = name;
+        document.getElementById('c-quiz').innerText = quiz;
+        document.getElementById('c-assign').innerText = assign;
+        document.getElementById('c-project').innerText = proj;
+        document.getElementById('c-percent').innerText = progress + '%';
+
+        document.getElementById('c-bar').style.width = '0%';
+
+        setTimeout(() => {
+
+            document.getElementById('c-bar').style.width = progress + '%';
+
+        }, 100);
+    }
+
+    function renderAtomCharts() {
+
+        const labels = [
+            {% for row in performance %}
+                "{{ row[2] }}",
+            {% endfor %}
+        ];
+
+        const quizData = [
+            {% for row in performance %}
+                {{ row[3] }},
+            {% endfor %}
+        ];
+
+        const assignData = [
+            {% for row in performance %}
+                {{ row[4] }},
+            {% endfor %}
+        ];
+
+        const projectData = [
+            {% for row in performance %}
+                {{ row[5] }},
+            {% endfor %}
+        ];
+
+        const progressData = [
+            {% for row in performance %}
+                {{ row[8] }},
+            {% endfor %}
+        ];
+
+        // LINE CHART
+
+        const lineCtx = document.getElementById('courseLineChart');
+
+        new Chart(lineCtx, {
+
+            type: 'line',
+
+            data: {
+
+                labels: labels,
+
+                datasets: [{
+
+                    label: 'Completion %',
+
+                    data: progressData,
+
+                    borderColor: '#22d3ee',
+
+                    backgroundColor: 'rgba(34,211,238,0.15)',
+
+                    borderWidth: 3,
+
+                    tension: 0.4,
+
+                    fill: true,
+
+                    pointBackgroundColor: '#22d3ee',
+
+                    pointRadius: 5
+
+                }]
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+
+                        labels: {
+
+                            color: 'white'
+                        }
+                    }
+                },
+
+                scales: {
+
+                    x: {
+
+                        ticks: {
+
+                            color: 'white'
+                        },
+
+                        grid: {
+
+                            color: 'rgba(255,255,255,0.05)'
+                        }
+                    },
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        max: 100,
+
+                        ticks: {
+
+                            color: 'white'
+                        },
+
+                        grid: {
+
+                            color: 'rgba(255,255,255,0.05)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // BAR CHART
+
+        const barCtx = document.getElementById('courseBarChart');
+
+        new Chart(barCtx, {
+
+            type: 'bar',
+
+            data: {
+
+                labels: labels,
+
+                datasets: [
+
+                    {
+
+                        label: 'Quiz',
+
+                        data: quizData,
+
+                        backgroundColor: '#06b6d4'
+                    },
+
+                    {
+
+                        label: 'Assignments',
+
+                        data: assignData,
+
+                        backgroundColor: '#a855f7'
+                    },
+
+                    {
+
+                        label: 'Projects',
+
+                        data: projectData,
+
+                        backgroundColor: '#f97316'
+                    }
+                ]
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+
+                        labels: {
+
+                            color: 'white'
+                        }
+                    }
+                },
+
+                scales: {
+
+                    x: {
+
+                        ticks: {
+
+                            color: 'white'
+                        },
+
+                        grid: {
+
+                            color: 'rgba(255,255,255,0.05)'
+                        }
+                    },
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        max: 100,
+
+                        ticks: {
+
+                            color: 'white'
+                        },
+
+                        grid: {
+
+                            color: 'rgba(255,255,255,0.05)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+</script>
+
+</body>
+</html>
